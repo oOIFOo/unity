@@ -17,8 +17,8 @@ public class player_controller : MonoBehaviour
     private float speed = 5.0f;
     private MMD4MecanimModel mmd;
     private MMD4MecanimModelImpl.Morph morph;
-    private AnimationClip sex_man;
-    private AnimationClip sex_girl;
+    private AnimationClip s_man;
+    private AnimationClip s_girl;
 
     public bool ground = true;
     public GameObject NPC;
@@ -26,17 +26,17 @@ public class player_controller : MonoBehaviour
     public Camera main_camera;
     public AnimatorOverrideController player_overrideController;
     public AnimatorOverrideController npc_overrideController;
-    public string sex_path;
+    public string s_path;
     public Canvas X_ray;
     public enum Main_State
     {
         normal = 0,
         dialog = 1,
-        sex = 2,
+        s = 2,
         followed = 3
     }
     public Main_State main_mode;
-    public enum Sex_State
+    public enum s_State
     {
         initial = 0,
         main_loop = 1,
@@ -44,7 +44,7 @@ public class player_controller : MonoBehaviour
         free_camera = 3,
         finish = 4
     }
-    public Sex_State sex_state;
+    public s_State s_state;
 
     // Start is called before the first frame update
     void Start()
@@ -70,8 +70,8 @@ public class player_controller : MonoBehaviour
             case Main_State.dialog:
                 break;
 
-            case Main_State.sex:
-                sex_change_mode();
+            case Main_State.s:
+                s_change_mode();
                 break;
 
             case Main_State.followed:
@@ -86,7 +86,7 @@ public class player_controller : MonoBehaviour
     {
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
-        if (sex_state != Sex_State.change_position && sex_state != Sex_State.free_camera && main_mode != Main_State.dialog)
+        if (s_state != s_State.change_position && s_state != s_State.free_camera && main_mode != Main_State.dialog)
         {
             if (ground == true)
             {
@@ -171,13 +171,13 @@ public class player_controller : MonoBehaviour
     public void initial_use()
     {
         DialogueLua.SetVariable("end_use", false);
-        main_mode = Main_State.sex;
-        npc_control.main_mode = Main_State.sex;
+        main_mode = Main_State.s;
+        npc_control.main_mode = Main_State.s;
 
         Physics.IgnoreCollision(coll, NPC.gameObject.GetComponent<Collider>(), true);
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         bone.enabled = true;
-        npc_control.sex_path = sex_path;
+        npc_control.s_path = s_path;
         morph = mmd.GetMorph("Ivisible Body");
         morph.weight = 0;
         morph = mmd.GetMorph("Ivisible Head");
@@ -195,8 +195,8 @@ public class player_controller : MonoBehaviour
     {
         animator.SetBool("loop", false);
         npc_animator.SetBool("loop", false);
-        animator.SetBool("cum", false);
-        npc_animator.SetBool("cum", false);
+        animator.SetBool("c", false);
+        npc_animator.SetBool("c", false);
         animator.SetBool("finish", false);
         npc_animator.SetBool("finish", false);
     }
@@ -206,21 +206,21 @@ public class player_controller : MonoBehaviour
         animator.Play("WAIT");
         all_var_false();
 
-        sex_state = Sex_State.finish;
+        s_state = s_State.finish;
     }
-    public void initial_sex()
+    public void initial_s()
     {
-        sex_man = Resources.Load<AnimationClip>(sex_path + "/man_vmd");
-        sex_girl = Resources.Load<AnimationClip>(sex_path + "/girl_vmd");
-        player_overrideController["default_sex"] = sex_man;
-        npc_overrideController["default_sex"] = sex_girl;
-        main_mode = Main_State.sex;
-        npc_control.main_mode = Main_State.sex;
+        s_man = Resources.Load<AnimationClip>(s_path + "/man_vmd");
+        s_girl = Resources.Load<AnimationClip>(s_path + "/girl_vmd");
+        player_overrideController["default_s"] = s_man;
+        npc_overrideController["default_s"] = s_girl;
+        main_mode = Main_State.s;
+        npc_control.main_mode = Main_State.s;
 
         Physics.IgnoreCollision(coll, NPC.gameObject.GetComponent<Collider>(), true);
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         bone.enabled = true;
-        npc_control.sex_path = sex_path;
+        npc_control.s_path = s_path;
         morph = mmd.GetMorph("Ivisible Body");
         morph.weight = 0;
         morph = mmd.GetMorph("Ivisible Head");
@@ -232,61 +232,61 @@ public class player_controller : MonoBehaviour
 
         X_ray.enabled = true;
     }
-    public void sex_change_mode()
+    public void s_change_mode()
     {
-        switch (sex_state)
+        switch (s_state)
         {
-            case Sex_State.initial:
-                sex_state = Sex_State.main_loop;
+            case s_State.initial:
+                s_state = s_State.main_loop;
                 break;
 
-            case Sex_State.main_loop:
+            case s_State.main_loop:
                 CheckKey();
 
                 if (Input.GetKey(KeyCode.Z))
                 {
-                    sex_state = Sex_State.change_position;
+                    s_state = s_State.change_position;
                 }
                 if (Input.GetKey(KeyCode.C))
                 {
                     morph = mmd.GetMorph("Ivisible Head");
                     morph.weight = 0;
-                    sex_state = Sex_State.free_camera;
+                    s_state = s_State.free_camera;
                 }
                 if (Input.GetKey(KeyCode.R))
                 {
-                    sex_state = Sex_State.finish;
+                    s_state = s_State.finish;
                 }
                 break;
 
-            case Sex_State.free_camera:
+            case s_State.free_camera:
                 if (Input.GetKey(KeyCode.V))
                 {
                     morph = mmd.GetMorph("Ivisible Head");
                     morph.weight = 1;
-                    sex_state = Sex_State.main_loop;
+                    s_state = s_State.main_loop;
                 }
                 break;
 
-            case Sex_State.change_position:
+            case s_State.change_position:
                 if (Input.GetKey(KeyCode.X))
                 {
-                    sex_state = Sex_State.main_loop;
+                    s_state = s_State.main_loop;
                 }
                 break;
 
-            case Sex_State.finish:
+            case s_State.finish:
                 Physics.IgnoreCollision(coll, NPC.gameObject.GetComponent<Collider>(), false);
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
                 bone.enabled = false;
-                animator.SetBool("sex", false);
+                animator.SetBool("s", false);
                 morph = mmd.GetMorph("Ivisible Body");
                 morph.weight = 1;
                 morph = mmd.GetMorph("Ivisible Head");
                 morph.weight = 0;
 
-                sex_state = Sex_State.initial;
-                npc_control.sex_state = Sex_State.finish;
+                s_state = s_State.initial;
+                npc_control.s_state = s_State.finish;
                 main_mode = Main_State.normal;
                 DialogueLua.SetVariable("end_use", true);
 

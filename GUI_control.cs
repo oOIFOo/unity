@@ -23,8 +23,8 @@ public class GUI_control : MonoBehaviour
 	public Text bottom8_text;
 	public Text bottom9_text;
 	public Text bottom0_text;
-	public Canvas sex_select_canvas;
-	public string sex_path;
+	public Canvas s_select_canvas;
+	public string s_path;
 	public GameObject npc_prefeb;
 
 	public string prefeb_name;
@@ -45,7 +45,7 @@ public class GUI_control : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.H))
 		{
-			path_list = File.ReadAllLines("Assets\\Resources\\sex_path.txt");
+			path_list = File.ReadAllLines("Assets\\Resources\\s_path.txt");
 			bottom1_text.text = path_list[0];
 			bottom2_text.text = path_list[1];
 			bottom3_text.text = path_list[2];
@@ -83,7 +83,7 @@ public class GUI_control : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.U))
         {
 			var sr = File.CreateText("Assets\\Resources\\npc_list.txt");
-			GameObject tmp = GameObject.Find("±ãÆ÷");
+			GameObject tmp = GameObject.Find("npc_p");
 			for(int i = 0; i < tmp.transform.childCount; i++)
             {
 				GameObject prefab_ = tmp.transform.GetChild(i).gameObject;
@@ -98,7 +98,7 @@ public class GUI_control : MonoBehaviour
 	}
 	public void exit_bottom()
 	{
-		var sr = File.CreateText("Assets\\Resources\\sex_path.txt");
+		var sr = File.CreateText("Assets\\Resources\\s_path.txt");
 		sr.WriteLine(bottom1_text.text);
 		sr.WriteLine(bottom2_text.text);
 		sr.WriteLine(bottom3_text.text);
@@ -115,47 +115,47 @@ public class GUI_control : MonoBehaviour
 	}
 	public void select_file()
 	{
-		sex_path = select_motion("anim");
+		s_path = select_motion("anim");
 	}
-	public void sex1_bottom()
+	public void s1_bottom()
 	{
-		bottom1_text.text = sex_path;
+		bottom1_text.text = s_path;
 	}
-	public void sex2_bottom()
+	public void s2_bottom()
 	{
-		bottom2_text.text = sex_path;
+		bottom2_text.text = s_path;
 	}
-	public void sex3_bottom()
+	public void s3_bottom()
 	{
-		bottom3_text.text = sex_path;
+		bottom3_text.text = s_path;
 	}
-	public void sex4_bottom()
+	public void s4_bottom()
 	{
-		bottom4_text.text = sex_path;
+		bottom4_text.text = s_path;
 	}
-	public void sex5_bottom()
+	public void s5_bottom()
 	{
-		bottom5_text.text = sex_path;
+		bottom5_text.text = s_path;
 	}
-	public void sex6_bottom()
+	public void s6_bottom()
 	{
-		bottom6_text.text = sex_path;
+		bottom6_text.text = s_path;
 	}
-	public void sex7_bottom()
+	public void s7_bottom()
 	{
-		bottom7_text.text = sex_path;
+		bottom7_text.text = s_path;
 	}
-	public void sex8_bottom()
+	public void s8_bottom()
 	{
-		bottom8_text.text = sex_path;
+		bottom8_text.text = s_path;
 	}
-	public void sex9_bottom()
+	public void s9_bottom()
 	{
-		bottom9_text.text = sex_path;
+		bottom9_text.text = s_path;
 	}
-	public void sex0_bottom()
+	public void s0_bottom()
 	{
-		bottom0_text.text = sex_path;
+		bottom0_text.text = s_path;
 	}
 	OpenFileName openFileName;
 	public string select_motion(string type)

@@ -18,7 +18,7 @@ public class follow_bone : MonoBehaviour
     }
     void Update()
     {
-        if (playercoll.sex_state == player_controller.Sex_State.free_camera)
+        if (playercoll.s_state == player_controller.s_State.free_camera)
         {
             float rh = Input.GetAxis("Mouse X");
             float rv = Input.GetAxis("Mouse Y");

@@ -5,7 +5,7 @@ using UnityEngine;
 using System.IO;
 using PixelCrushers.DialogueSystem;
 using Main_State = player_controller.Main_State;
-using Sex_State = player_controller.Sex_State;
+using s_State = player_controller.s_State;
 
 public class item_controller : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class item_controller : MonoBehaviour
     private player_controller palyercontroll;
     private NPC_controller npc_control;
     private AnimatorOverrideController NPC_AOC;
-    private AnimationClip sex_girl;
+    private AnimationClip s_girl;
     private string dir;
     private string state;
     private Rigidbody rb;
@@ -78,9 +78,9 @@ public class item_controller : MonoBehaviour
     {
         string path = Path.Combine("Ê¹ÓÃ„Ó×÷", dir, motion + "_vmd");
         Debug.Log(path);
-        sex_girl = Resources.Load<AnimationClip>(path);
+        s_girl = Resources.Load<AnimationClip>(path);
 
-        NPC_AOC[state] = sex_girl;
+        NPC_AOC[state] = s_girl;
     }
     void start_use(string motion)
     {
@@ -89,7 +89,7 @@ public class item_controller : MonoBehaviour
             if(prefab_ != null)
             {
                 npc_control = prefab_.GetComponent<NPC_controller>();
-                npc_control.main_mode = Main_State.sex;
+                npc_control.main_mode = Main_State.s;
             }
         }
 
@@ -105,7 +105,7 @@ public class item_controller : MonoBehaviour
         player.transform.parent = gameObject.transform;
         player.transform.rotation = transform.rotation;
         player.transform.localPosition = Vector3.zero;
-        palyercontroll.main_mode = Main_State.sex;
+        palyercontroll.main_mode = Main_State.s;
     }
     void end_use(string motion)
     {
@@ -140,7 +140,7 @@ public class item_controller : MonoBehaviour
         NPC_.GetComponent<Rigidbody>().isKinematic = false;
         Physics.IgnoreCollision(coll, NPC_.gameObject.GetComponent<Collider>(), false);
 
-        NPC_.GetComponent<NPC_controller>().sex_state = Sex_State.finish;
+        NPC_.GetComponent<NPC_controller>().s_state = s_State.finish;
 
         Animator anim = NPC_.GetComponent<Animator>();
         anim.SetBool("used", false);

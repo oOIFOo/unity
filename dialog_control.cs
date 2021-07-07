@@ -14,11 +14,11 @@ public class dialog_control : MonoBehaviour
     private Animator NPC_animator;
     private AnimatorOverrideController NPC_AOC;
     private Animator player_animator;
-    private AnimationClip sex_man;
-    private AnimationClip sex_girl;
+    private AnimationClip s_man;
+    private AnimationClip s_girl;
     private DialogueSystemTrigger conversion;
 
-    public Canvas sex_select;
+    public Canvas s_select;
     public ObiParticleRenderer obi;
     public MMD4MecanimModel womb;
     public AnimatorOverrideController player_overrideController;
@@ -54,10 +54,10 @@ public class dialog_control : MonoBehaviour
             npc_control.look_camera();
         }
     }
-    public void sex_bottom()
+    public void s_bottom()
     {
-        sex_select.gameObject.GetComponent<sex_select>().load_pathlist();
-        palyercontroll.npc_control.main_mode = player_controller.Main_State.sex;
+        s_select.gameObject.GetComponent<s_select>().load_pathlist();
+        palyercontroll.npc_control.main_mode = player_controller.Main_State.s;
     }
     public void follow_bottom()
     {
@@ -73,7 +73,7 @@ public class dialog_control : MonoBehaviour
         palyercontroll.main_mode = player_controller.Main_State.normal;
         palyercontroll.npc_control.main_mode = player_controller.Main_State.normal;
     }
-    public void change_speed_buttom()
+    public void change_spd_buttom()
     {
         if (DialogueLua.GetVariable("loop_phase").AsInt == 0)
         {
@@ -85,23 +85,23 @@ public class dialog_control : MonoBehaviour
         }
         Sequencer.Message("event_next");
     }
-    public void cum_buttom()
+    public void c_buttom()
     {
         npc_control = palyercontroll.NPC.GetComponent<NPC_controller>();
         DialogueLua.SetVariable("loop_phase", 2);
         Sequencer.Message("event_next");
     }
-    public void pee_bottom()
+    public void p_bottom()
     {
         DialogueLua.SetVariable("loop_phase", 3);
         Sequencer.Message("event_next");
     }
-    public void start_pee()
+    public void start_p()
     {
         obi.enabled = true;
         npc_control = palyercontroll.NPC.GetComponent<NPC_controller>();
     }
-    public void stop_pee()
+    public void stop_p()
     {
         obi.enabled = false;
 
@@ -123,13 +123,13 @@ public class dialog_control : MonoBehaviour
         {
             npc_control.load_morph(tmp, "event_wait");
         }
-        else if (hash == Animator.StringToHash("Base Layer." + "insert"))
+        else if (hash == Animator.StringToHash("Base Layer." + "start"))
         {
-            npc_control.load_morph(tmp, "insert");
+            npc_control.load_morph(tmp, "start");
         }
-        else if (hash == Animator.StringToHash("Base Layer." + "insert_wait"))
+        else if (hash == Animator.StringToHash("Base Layer." + "start_wait"))
         {
-            npc_control.load_morph(tmp, "insert_wait");
+            npc_control.load_morph(tmp, "start_wait");
         }
         else if (hash == Animator.StringToHash("Base Layer." + "loop_slow"))
         {
@@ -139,9 +139,9 @@ public class dialog_control : MonoBehaviour
         {
             npc_control.load_morph(tmp, "loop_fast");
         }
-        else if (hash == Animator.StringToHash("Base Layer." + "cum"))
+        else if (hash == Animator.StringToHash("Base Layer." + "c"))
         {
-            npc_control.load_morph(tmp, "cum");
+            npc_control.load_morph(tmp, "c");
         }
         else if (hash == Animator.StringToHash("Base Layer." + "finish"))
         {
@@ -171,15 +171,15 @@ public class dialog_control : MonoBehaviour
     public void load_girl_motion(string motion)
     {
         string path = Path.Combine("使用動作", dir, motion + "_vmd");
-        sex_girl = Resources.Load<AnimationClip>(path);
+        s_girl = Resources.Load<AnimationClip>(path);
 
-        NPC_AOC[state] = sex_girl;
+        NPC_AOC[state] = s_girl;
     }
     public void load_man_motion(string motion)
     {
         string path = Path.Combine("使用動作", dir, motion + "_vmd");
-        sex_man = Resources.Load<AnimationClip>(path);
-        player_overrideController[state] = sex_man;
+        s_man = Resources.Load<AnimationClip>(path);
+        player_overrideController[state] = s_man;
     }
     public void load_conversion(string name)
     {

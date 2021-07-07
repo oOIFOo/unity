@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.AI;
 using Main_State = player_controller.Main_State;
-using Sex_State = player_controller.Sex_State;
+using s_State = player_controller.s_State;
 using PixelCrushers.DialogueSystem;
 using UnityEditor;
 
@@ -20,7 +20,7 @@ public class NPC_controller : MonoBehaviour
     private MMD4MecanimModelImpl.Anim tmp = new MMD4MecanimModelImpl.Anim();
     private List<MMD4MecanimModelImpl.Anim> terms = new List<MMD4MecanimModelImpl.Anim>();
     private Camera main_camera;
-    private Vector3 sex_offset = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 s_offset = new Vector3(0.0f, 0.0f, 0.0f);
     private GameObject head;
     private GameObject neck;
     private MMD4MecanimModelImpl.Morph morph;
@@ -30,10 +30,10 @@ public class NPC_controller : MonoBehaviour
     public bool init;
     public MMD4MecanimBone head_bone;
     public MMD4MecanimBone neck_bone;
-    public string sex_path = "";
+    public string s_path = "";
     public bool look_at_camera = false;
     public Main_State main_mode;
-    public Sex_State sex_state;
+    public s_State s_state;
     public Vector3 init_position;
     public string prefeb_path;
     public float wanderRadius;
@@ -54,9 +54,9 @@ public class NPC_controller : MonoBehaviour
 
         //gameObject.transform.position = init_position;
         if(gameObject.transform.parent == null)
-            gameObject.transform.parent = GameObject.Find("便器").transform;
+            gameObject.transform.parent = GameObject.Find("NPC_p").transform;
         main_mode = Main_State.normal;
-        sex_state = Sex_State.initial;
+        s_state = s_State.initial;
         agent.speed = 2.0f;
         wanderRadius = 200.0f;
         wanderTimer = 10.0f;
@@ -102,8 +102,8 @@ public class NPC_controller : MonoBehaviour
                 }
                 break;
 
-            case Main_State.sex:
-                sex();
+            case Main_State.s:
+                s();
                 break;
 
             case Main_State.followed:
@@ -206,7 +206,7 @@ public class NPC_controller : MonoBehaviour
             tmp.animFile = Resources.Load<TextAsset>(file_path);
             tmp.animatorStateName = "Base Layer." + layer_name;
             tmp.animatorStateNameHash = Animator.StringToHash(tmp.animatorStateName);
-            tmp.audioClip = Resources.Load<AudioClip>(sex_path + "/sex");
+            tmp.audioClip = Resources.Load<AudioClip>(s_path + "/s");
             tmp.animData = MMD4MecanimData.BuildAnimData(tmp.animFile);
 
             terms.Add(tmp);
@@ -216,40 +216,40 @@ public class NPC_controller : MonoBehaviour
             MMD4MecanimAnim.InitializeAnimModel(mmd);
         }
     }
-    void sex()
+    void s()
     {
-        switch (sex_state)
+        switch (s_state)
         {
-            case Sex_State.initial:
+            case s_State.initial:
                 //load offset
-                if (File.Exists("Assets\\Resources\\" + sex_path + "\\offset.txt"))
+                if (File.Exists("Assets\\Resources\\" + s_path + "\\offset.txt"))
                 {
-                    json = File.ReadAllText("Assets\\Resources\\" + sex_path + "\\offset.txt");
-                    sex_offset = JsonUtility.FromJson<Vector3>(json);
+                    json = File.ReadAllText("Assets\\Resources\\" + s_path + "\\offset.txt");
+                    s_offset = JsonUtility.FromJson<Vector3>(json);
                 }
 
                 //load anim and audio
                 if (anim.GetBool("used") == false)
                 {
-                    load_morph(sex_path + "/girl.anim", "girl_vmd");    
+                    load_morph(s_path + "/girl.anim", "girl_vmd");    
                 }
 
-                if (mmd != null) morph = mmd.GetMorph("nude");
+                if (mmd != null) morph = mmd.GetMorph("n");
                 if (morph != null) morph.weight = 1;
 
-                sex_state = palyercontroll.sex_state;
+                s_state = palyercontroll.s_state;
                 break;
 
-            case Sex_State.main_loop:
+            case s_State.main_loop:
                 checke_move();
 
                 this.transform.rotation = player.transform.rotation;
-                this.transform.localPosition = sex_offset;
+                this.transform.localPosition = s_offset;
 
-                sex_state = palyercontroll.sex_state;
+                s_state = palyercontroll.s_state;
                 break;
 
-            case Sex_State.change_position:
+            case s_State.change_position:
                 float moveVertical = Input.GetAxis("Vertical");
                 float moveHorizontal = Input.GetAxis("Horizontal");
                 float jump_axis = Input.GetAxis("Jump");
@@ -257,45 +257,45 @@ public class NPC_controller : MonoBehaviour
                 {
                     jump_axis *= -1;
                 }
-                sex_offset += new Vector3(moveHorizontal * 0.01f, jump_axis * 0.003f, moveVertical * 0.01f);
-                this.transform.localPosition = sex_offset;
+                s_offset += new Vector3(moveHorizontal * 0.01f, jump_axis * 0.003f, moveVertical * 0.01f);
+                this.transform.localPosition = s_offset;
 
-                sex_state = palyercontroll.sex_state;
+                s_state = palyercontroll.s_state;
                 break;
 
-            case Sex_State.free_camera:
+            case s_State.free_camera:
                 this.transform.rotation = player.transform.rotation;
-                this.transform.localPosition = sex_offset;
+                this.transform.localPosition = s_offset;
 
-                sex_state = palyercontroll.sex_state;
+                s_state = palyercontroll.s_state;
                 break;
 
-            case Sex_State.finish:
-                sex_finish();
-                sex_state = Sex_State.initial;
+            case s_State.finish:
+                s_finish();
+                s_state = s_State.initial;
                 break;
 
             default:
                 break;
         }
     }
-    void sex_finish()
+    void s_finish()
     {
-        //finish sex
-        this.transform.parent = GameObject.Find("便器").transform;
+        //finish s
+        this.transform.parent = GameObject.Find("NPC_p").transform;
         transform.position += new Vector3(0.0f, 0.0f, 0.3f);
-        anim.SetBool("sex1", false);
+        anim.SetBool("s1", false);
 
         if (anim.GetBool("used") == false)
         {
-            load_morph("事後/sex_after.anim", "sex_after");
-            if (mmd != null) morph = mmd.GetMorph("nude");
+            load_morph("事後/s_after.anim", "s_after");
+            if (mmd != null) morph = mmd.GetMorph("n");
             if (morph != null) morph.weight = 1;
         }
 
         //save offset file
-        var sr = File.CreateText("Assets\\Resources\\" + sex_path + "\\offset.txt");
-        json = JsonUtility.ToJson(sex_offset);
+        var sr = File.CreateText("Assets\\Resources\\" + s_path + "\\offset.txt");
+        json = JsonUtility.ToJson(s_offset);
         sr.WriteLine(json);
         sr.Close();
     }
@@ -364,7 +364,7 @@ public class NPC_controller : MonoBehaviour
 
             gameObject.layer = 15;
 
-            gameObject.GetComponent<DialogueSystemTrigger>().conversation = "開朗_完美";
+            gameObject.GetComponent<DialogueSystemTrigger>().conversation = "normal";
 
             gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
@@ -383,7 +383,7 @@ public class NPC_controller : MonoBehaviour
 
             editScope.prefabContentsRoot.layer = 15;
 
-            editScope.prefabContentsRoot.GetComponent<DialogueSystemTrigger>().conversation = "開朗_完美";
+            editScope.prefabContentsRoot.GetComponent<DialogueSystemTrigger>().conversation = "normal";
 
             editScope.prefabContentsRoot.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
